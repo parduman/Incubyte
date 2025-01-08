@@ -4,8 +4,14 @@ class StringCalculator
     if numbers.start_with?('//')
       numbers = numbers[2..]
       delimiter, numbers = numbers.split("\n", 2)
-      return numbers.split(/#{Regexp.escape(delimiter)}|\n/).map(&:to_i).sum
+      numbers =  numbers.split(/#{Regexp.escape(delimiter)}|\n/).map(&:to_i)
+    else
+      numbers = numbers.split(/,|\n/).map(&:to_i)
     end
-    numbers.split(/,|\n/).map(&:to_i).sum
+
+    negatives = numbers.select { |n| n < 0 }
+    raise "negatives not allowed: #{negatives.join(', ')}" unless negatives.empty?
+    
+    numbers.sum
   end
 end
